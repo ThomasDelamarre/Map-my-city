@@ -1,18 +1,26 @@
 from extract_data_with_OSMnx import extractCityFromOsm
-from prepare_data_for_postman_problem import getAllEdges, isolateUnlinkedGraphs
+from prepare_data_for_postman_problem import getAllEdgesFromOsm, isolateUnlinkedGraphs
 from visualisation_tools import visualise_graph, visualise_circuit_with_plt
 from solve_postman_problem import solvePostmanProblem
 from external_files_handler import createCsvFromEdges, readSolutionFromCsv, createGpxFromCircuit
 from classes.circuit import Circuit
 import timeit
 import os.path
-import datetime.datetime
+import datetime
+
+#Rajouter les routes limitrophes en optionnel
+
+arrds = ["Paris 1er arrondissement", "Paris 2e arrondissement", "Paris 3e arrondissement", "Paris 4e arrondissement", "Paris 5e arrondissement",
+         "Paris 6e arrondissement","Paris 7e arrondissement","Paris 8e arrondissement","Paris 9e arrondissement","Paris 10e arrondissement",
+         "Paris 11e arrondissement","Paris 12e arrondissement","Paris 13e arrondissement","Paris 14e arrondissement","Paris 15e arrondissement",
+         "Paris 16e arrondissement", "Paris 17e arrondissement", "Paris 18e arrondissement", "Paris 19e arrondissement", "Paris 20e arrondissement"]
 
 
-def main(create_pdf=False, visualise_solutions=False):
-    city = "Vaucresson"
-    network_type = "drive"
-    #TODO NETWORK TYPE CHECK TO AVIOD PUBLIC PARCS + MOTORWAYS
+
+
+
+def main(city, create_pdf=False, visualise_solutions=False):
+    network_type = "all_private"
     filename = city + "_" + network_type
 
     start_total = timeit.default_timer()
@@ -31,7 +39,7 @@ def main(create_pdf=False, visualise_solutions=False):
     print("Step 2 - Prepare OSM data for solve")
     start_step = timeit.default_timer()
 
-    all_edges = getAllEdges(filename=filename)
+    all_edges = getAllEdgesFromOsm(filename=filename)
     graphs = isolateUnlinkedGraphs(all_edges)
 
     stop_step = timeit.default_timer()
@@ -58,6 +66,7 @@ def main(create_pdf=False, visualise_solutions=False):
 
         # Solve postman problems for all graphs
         # TODO ATTENTION FONCTIONNE AVEC DES EDGES NON DIRECTIONNELS
+        # TODO NE FAIRE REVENIR AU DEBUT
         solvePostmanProblem(name, write=False, write_minimal=True)
 
         stop = timeit.default_timer()
@@ -89,4 +98,5 @@ def main(create_pdf=False, visualise_solutions=False):
 
 
 if __name__ == "__main__":
-    main()
+    for arrd in arrds:
+        main(arrd)

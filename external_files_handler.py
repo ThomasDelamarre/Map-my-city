@@ -1,6 +1,5 @@
 import csv
 import gpxpy
-from classes.circuit import Circuit
 
 
 def createCsvFromEdges(edges, name):
@@ -10,7 +9,7 @@ def createCsvFromEdges(edges, name):
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         spamwriter.writerow(['From', "To", "distance", "required"])
         for edge in edges.edges:
-            spamwriter.writerow([edge.node1.id, edge.node2.id, edge.length, 1])
+            spamwriter.writerow([edge.node1.id, edge.node2.id, edge.length, edge.required])
 
 
 def createCsvFromCircuit(circuit, name):
